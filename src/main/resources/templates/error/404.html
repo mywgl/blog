@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="commons/common::head(~{::title},_)">
+  <title>404</title>
+</head>
+<body>
+  <nav th:replace="commons/common::topbar('')"></nav>
+  <div class="m-container-small m-padded-tb-veryBig">
+    <div class="ui error message m-padded-tb-huge">
+      <div class="ui container center aligned">
+        <h1>404</h1>
+        <p>对不起,您访问的资源不存在!</p>
+      </div>
+    </div>
+  </div>
+  <footer th:replace="commons/common::footer"></footer>
+</body>
+</html>

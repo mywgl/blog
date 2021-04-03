@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.blog.dao.CommentDao">
+    <select id="getCommentByBlogId" parameterType="Long" resultType="Comment">
+        select *
+        from t_comment
+        where blog_id = #{blogId}
+          and parent_comment_id is null
+    </select>
+    <!--查询二级评论-->
+    <select id="getChildrenCommentByParentId" parameterType="Long" resultType="Comment">
+        select *
+        from t_comment
+        where blog_id = #{blogId}
+          and parent_comment_id = #{parId}
+        order by create_time desc
+    </select>
+
+    <insert id="saveComment" parameterType="Comment">
+        insert into t_comment(nick_name, email, content, avatar, blog_id, parent_comment_id)
+            value (
+                   #{nickName},
+                   #{email},
+                   #{content},
+                   #{avatar},
+                   #{blogId},
+                   #{parentCommentId}
+            )
+    </insert>
+
+</mapper>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<nav th:fragment="nav(active)" class="ui inverted vertical segment m-padding-tb-mini m-shadow-small">
+  <div class="ui container">
+    <div class="ui inverted secondary stackable menu ">
+      <h2 class="ui teal header item">博客后台管理</h2>
+      <a th:href="@{/admin/blogs}" class="item m-item m-mobile-hide" th:classappend="${active=='blogs'} ? active">
+        <i class="home icon"></i>博客
+      </a>
+      <a th:href="@{/admin/types}" class="item m-item m-mobile-hide" th:classappend="${active=='types'} ? active">
+        <i class="idea icon"></i>分类
+      </a>
+      <a th:href="@{/admin/tags}" class="item m-item m-mobile-hide" th:classappend="${active=='tags'} ? active">
+        <i class="tags icon"></i>标签
+      </a>
+      <!--头像-->
+      <div class="right m-item m-mobile-hide menu">
+        <div class="ui dropdown item">
+          <div class="text">
+            <img th:src="@{${session.user.avatar}}" alt="" class="ui avatar image">
+            <span th:text="${session.user.nickName}">李二狗</span>
+          </div>
+          <i class="dropdown icon"></i>
+          <div class="menu">
+            <a th:href="@{/admin/logout}" class="item">注销</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <a href="#" class="ui black icon button m-right-top m-mobile-show menu toggle">
+    <i class="sidebar icon"></i>
+  </a>
+</nav>
+
+<div th:fragment="blogs_menu(active)" class="ui attached pointing menu">
+  <div class="ui container">
+    <div class="right menu">
+      <a th:href="@{/admin/blogs}" class="teal item" th:classappend="${active=='list'} ? 'active'">文章管理</a>
+      <a th:href="@{/admin/blogs/input}" class="teal item" th:classappend="${active=='release'} ? 'active'">写博客</a>
+    </div>
+  </div>
+</div>
+
+<!--<div th:fragment="type_menu(active)" class="ui attached pointing menu">-->
+<!--  <div class="ui container">-->
+<!--    <div class="right menu">-->
+<!--      <a th:href="@{/admin/types}" class="item" th:classappend="${active=='types'} ? 'active'">分类管理</a>-->
+<!--      <a th:href="@{/admin/types/input}" class="teal item" th:classappend="${active=='new'} ? 'active'">新增分类</a>-->
+<!--    </div>-->
+<!--  </div>-->
+</div>
+</html>

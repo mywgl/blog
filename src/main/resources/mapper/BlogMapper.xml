@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.blog.dao.BlogDao">
+    <resultMap id="blog" type="Blog">
+        <id property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="firstPicture" column="first_picture"/>
+        <result property="flag" column="flag"/>
+        <result property="views" column="views"/>
+        <result property="appreciation" column="appreciation"/>
+        <result property="sharStatement" column="shar_statement"/>
+        <result property="commentEnabled" column="comment_enabled"/>
+        <result property="published" column="published"/>
+        <result property="recommended" column="recommended"/>
+        <result property="description" column="description"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <association property="type" columnPrefix="t_" javaType="Type">
+            <id property="id" column="id"/>
+            <result property="name" column="name"/>
+        </association>
+        <association property="user" columnPrefix="tu_" javaType="User">
+            <id property="id" column="id"/>
+            <result property="nickName" column="nick_name"/>
+            <result property="avatar" column="avatar"/>
+        </association>
+        <collection property="tags" columnPrefix="tt_" ofType="Tag">
+            <id property="id" column="id"/>
+            <result property="name" column="name"/>
+        </collection>
+    </resultMap>
+
+    <select id="getBlogById" parameterType="Long" resultMap="blog">
+        select b.*,
+               t.id         t_id,
+               t.name       t_name,
+               tt.id        tt_id,
+               tt.name      tt_name,
+               tu.id        tu_id,
+               tu.nick_name tu_nick_name,
+               tu.avatar    tu_avatar
+        from t_blog b,
+             t_user tu,
+             t_type t,
+             t_blog_tag tbt,
+             t_tag tt
+        where b.id = #{blogId}
+          and b.user_id = tu.id
+          and b.id = tbt.blog_id
+          and b.type_id = t.id
+          and tbt.tag_id = tt.id
+
+    </select>
+
+
+    <select id="getAllBlogByBlog" parameterType="BlogQuery" resultMap="blog">
+        select b.* ,t.id t_id,t.name t_name
+        from t_blog b, t_type t
+        where type_id = t.id
+        <if test="title !=null and title!=''">
+            and title LIKE CONCAT(CONCAT('%',
+            #{title}
+            ),
+            '%'
+            )
+        </if>
+        <if test="typeId !=null">
+            and type_id =
+            #{typeId}
+        </if>
+        <if test="recommended !=false and recommended !=null">
+            and recommended =
+            #{recommended}
+        </if>
+
+    </select>
+
+    <resultMap id="pageBlog" type="Blog">
+        <id property="id" column="tb_id"/>
+        <result property="title" column="tb_title"/>
+        <result property="description" column="tb_description"/>
+        <result property="views" column="tb_views"/>
+        <result property="updateTime" column="tb_update_time"/>
+        <result property="firstPicture" column="tb_first_picture"/>
+        <association property="user" columnPrefix="tu_" javaType="User">
+            <id property="id" column="id"/>
+            <result property="nickName" column="nick_name"/>
+            <result property="avatar" column="avatar"/>
+        </association>
+        <association property="type" columnPrefix="tt_" javaType="Type">
+            <id property="id" column="id"/>
+            <result property="name" column="name"/>
+        </association>
+        <collection property="tags" columnPrefix="t_" ofType="Tag">
+            <id property="id" column="id"/>
+            <result property="name" column="name"/>
+        </collection>
+    </resultMap>
+
+    <sql id="pagePar">
+        tb.id            tb_id,
+        tb.title         tb_title,
+        tb.description   tb_description,
+        tb.update_time   tb_update_time,
+        tb.views         tb_views,
+        tb.first_picture tb_first_picture,
+        tu.id            tu_id,
+        tu.nick_name     tu_nick_name,
+        tu.avatar        tu_avatar,
+        tt.id            tt_id,
+        tt.name          tt_name
+    </sql>
+    <select id="getFirstPageBlog" resultMap="pageBlog">
+        select
+        <include refid="pagePar"/>
+        from t_blog tb
+        left join t_user tu
+        on tb.user_id = tu.id
+        left join t_type tt
+        on tt.id = tb.type_id
+    </select>
+
+    <insert id="saveBlog" parameterType="Blog" useGeneratedKeys="true" keyProperty="id">
+        insert into t_blog (title, content, first_picture, flag, views, appreciation, shar_statement,
+                            comment_enabled, published, recommended, description, type_id, user_id)
+            VALUE (
+                   #{title},
+                   #{content},
+                   #{firstPicture},
+                   #{flag},
+                   #{views},
+                   #{appreciation},
+                   #{sharStatement},
+                   #{commentEnabled},
+                   #{published},
+                   #{recommended},
+                   #{description},
+                   #{typeId},
+                   #{userId}
+            )
+    </insert>
+
+    <update id="updateBlog" parameterType="Blog">
+        update t_blog
+        set title           = #{title},
+            content         = #{content},
+            first_picture   = #{firstPicture},
+            flag            = #{flag},
+            appreciation    = #{appreciation},
+            shar_statement  = #{sharStatement},
+            comment_enabled = #{commentEnabled},
+            published       = #{published},
+            recommended     = #{recommended},
+            type_id         = #{typeId},
+            description     = #{description}
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBlog" parameterType="Long">
+        delete
+        from t_blog
+        where id = #{id}
+    </delete>
+
+    <insert id="insertCenterTable">
+        insert into t_blog_tag(blog_id, tag_id)
+            value (#{blogId}, #{tagId})
+    </insert>
+
+    <delete id="deleteCenterTable" parameterType="Long">
+        delete from t_blog_tag
+        where blog_id = #{blogId}
+        and tag_id in (
+        select t.id
+        from(
+        select tag_id id
+        from t_blog_tag
+        where
+        <foreach collection="tagIds" index="index" item="item" open=" tag_id not in (" separator="," close=")">
+            #{item}
+        </foreach>
+        )t
+        )
+    </delete>
+
+    <select id="getTagByBlogId" parameterType="Long" resultType="Tag">
+        select *
+        from t_tag
+        where id in (
+            select tag_id
+            from t_blog_tag
+            where blog_id = #{id}
+        )
+    </select>
+
+    <select id="getResultByBlogIdAndTagId" parameterType="Long" resultType="Long">
+        select tag_id
+        from t_blog_tag
+        where tag_id = #{tagId}
+          and blog_id = #{blogId}
+    </select>
+
+    <delete id="deleteByBlogId" parameterType="Long">
+        delete
+        from t_blog_tag
+        where blog_id = #{blogId}
+    </delete>
+
+    <select id="getRecommendBlog" parameterType="_int" resultMap="blog">
+        select *
+        from t_blog
+        where recommended = true
+        order by update_time desc
+        limit #{pagSize};
+    </select>
+
+    <select id="getBlogBySearch" parameterType="String" resultMap="pageBlog">
+        select
+        <include refid="pagePar"/>
+        from t_blog tb
+        left join t_user tu
+        on tb.user_id = tu.id
+        left join t_type tt
+        on tt.id = tb.type_id
+        where tb.title like concat('%', concat(#{query}, '%'))
+        or tb.content like concat('%', concat(#{query}, '%'))
+    </select>
+
+    <update id="autoIncrementViews" parameterType="Long">
+        update t_blog
+        set views=views + 1
+        where id = #{blogId}
+    </update>
+
+    <select id="getBlogByTypeId" parameterType="Long" resultMap="pageBlog">
+        select
+        <include refid="pagePar"/>
+        from t_blog tb,
+        t_user tu,
+        t_type tt
+        where tb.user_id = tu.id
+        and tb.type_id = tt.id
+        and type_id = #{typdId}
+    </select>
+
+    <select id="getBlogListByTagId" parameterType="Long" resultMap="pageBlog">
+        select
+        <include refid="pagePar"/>
+        ,t.id t_id,
+        t.name t_name
+        from t_blog tb,
+        t_blog_tag tbt,
+        t_tag t,
+        t_user tu,
+        t_type tt
+        where tb.id = tbt.blog_id
+        and tb.type_id = tt.id
+        and tu.id = tb.user_id
+        and tbt.tag_id = t.id
+        and tb.id in (
+        select
+        tb.id
+        from t_blog tb ,
+        t_blog_tag tbt ,
+        t_tag t
+        where tb.id = tbt.blog_id
+        and t.id = tbt.tag_id
+        and t.id = #{tagId}
+        )
+    </select>
+
+    <select id="getYear" resultType="String">
+        select date_format(create_time,'%Y') year
+        from t_blog
+        group by year
+        order by year desc;
+    </select>
+
+    <select id="getBlogByYear" parameterType="String" resultType="blog">
+        select *
+        from t_blog
+        where date_format(create_time,'%Y') =#{year}
+        order by create_time  desc
+    </select>
+</mapper>

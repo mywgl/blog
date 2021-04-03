@@ -1,0 +1,9 @@
+server:
+  port: 9001
+
+logging:
+  level:
+    root: warn
+    com.blog: info
+  file:
+    name: log/blog-prod.log

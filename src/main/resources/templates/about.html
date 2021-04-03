@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="commons/common::head(~{::title},_)">
+  <title>关于我</title>
+</head>
+<body>
+  <!--导航-->
+  <nav th:replace="commons/common::topbar('about')"></nav>
+
+  <!--中间内容-->
+  <div class="m-padded-tb-big m-container">
+    <div class="ui container">
+      <div class="ui stackable grid">
+        <div class="eleven wide column">
+          <div class="ui segment">
+            <img src="https://picsum.photos/id/1025/800/600" alt="" class="ui rounded image">
+          </div>
+        </div>
+
+        <div class="five wide column">
+          <div class="ui top attached segment">
+            <div class="ui header">关于我</div>
+          </div>
+          <div class="ui attached segment">
+            <p class="m-text">李二狗, 一个独立开发者, 折腾在 0 和 1 世界的大叔; 一个终身学习者,
+              誓将学习无限循环,希望结识可以共同成长的小伙伴.</p>
+            <p>天下莫大于秋毫之未，而太山为小；莫寿乎殇子，而彭祖为夭。天地与我并生而万物与我为一！
+            </p>
+            <p>机遇是平等的，看你会不会抓住</p>
+            <p class="m-text">热爱编程,喜欢折腾,正在探索高效学习编程技术的方法...</p>
+          </div>
+          <div class="ui attached segment">
+            <div class="ui orange basic label left pointing m-margin-tb-big">编程</div>
+            <div class="ui orange basic label left pointing m-margin-tb-big">写作</div>
+            <div class="ui orange basic label left pointing m-margin-tb-big">思考</div>
+            <div class="ui orange basic label left pointing m-margin-tb-big">运动</div>
+          </div>
+          <div class="ui attached segment">
+            <div class="ui teal basic label left pointing m-margin-tb-tiny">Java</div>
+            <div class="ui teal basic label left pointing m-margin-tb-tiny">C</div>
+            <div class="ui teal basic label left pointing m-margin-tb-tiny">C#</div>
+            <div class="ui teal basic label left pointing m-margin-tb-tiny">Python</div>
+            <div class="ui teal basic label left pointing m-margin-tb-tiny">Mysql</div>
+            <div class="ui teal basic label left pointing m-margin-tb-tiny">JavaScript</div>
+            <div class="ui teal basic label left pointing m-margin-tb-tiny">...</div>
+
+          </div>
+          <div class="ui attached bottom segment">
+            <a href="#" class="ui circular icon button"><i class="github icon"></i></a>
+            <a href="#" class="qq ui circular icon button" data-content="2442997001" data-position="bottom center"><i
+                class="qq icon"></i></a>
+            <a href="#" class="ui wechat circular icon button"><i class="weixin icon"></i></a>
+          </div>
+
+          <div class="ui wechat-qr flowing popup transition hidden">
+            <img th:src="@{/images/wechat.jpg}" alt="" class="ui rounded image" style="width: 110px">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--底部-->
+  <footer th:replace="commons/common::footer"></footer>
+
+  <div th:replace="commons/common::common_js(_)"></div>
+
+  <script>
+    $('.qq').popup();
+
+    $('.wechat').popup({
+      popup: $('.wechat-qr'),
+      position: 'bottom center'
+    })
+  </script>
+</body>
+</html>

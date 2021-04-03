@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="commons/common::head(~{::title},_)">
+  <title>博客管理</title>
+</head>
+<body>
+  <!--导航-->
+  <nav th:replace="commons/admin-common::nav('')"></nav>
+  <!--中间内容-->
+
+  <div class="m-padded-tb-big m-container-small">
+    <div class="ui container">
+      <div class="ui success large message">
+        <h2>Hi,</h2>
+        <p th:text="|${session.user.userName},欢迎登录!|">李二狗,欢迎登录!</p>
+      </div>
+
+      <img src="https://picsum.photos/id/1025/900/500" alt="" class="ui rounded bordered fluid image">
+    </div>
+  </div>
+
+  <!--底部-->
+  <footer th:replace="commons/common::footer"></footer>
+
+  <div th:replace="commons/common::common_js(_)"></div>
+
+  <script>
+    $('.ui.dropdown').dropdown({
+      on: 'hover'
+    })
+  </script>
+</body>
+</html>

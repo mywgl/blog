@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="commons/common::head(~{::title},_)">
+  <title>搜索结果</title>
+</head>
+<body>
+  <!--导航-->
+  <nav th:replace="commons/common::topbar('')"></nav>
+
+  <!--中间内容-->
+  <div class="m-padded-tb-big m-container-small">
+    <div class="ui container">
+      <!--header-->
+      <div class="ui top attached  segment">
+        <div class="ui middle aligned two column grid">
+          <div class="column">
+            <h3 class="ui teal header">搜索结果</h3>
+          </div>
+          <div class="column right aligned">
+            共 <h2 th:text="${blogs.total}" class="ui orange header m-inline-block">14</h2>篇
+          </div>
+        </div>
+      </div>
+
+      <div id="search-request" class="ui segments">
+        <div th:fragment="searchList" >
+
+          <div class="ui top attached teal segment">
+            <div th:each="blog:${blogs.list}" th:object="${blog}"
+                 class="ui padded vertical segment m-padded-tb-large">
+              <!--mobile reversed 在移动端下图片进行反转到上面显示 默认图片是在文章下面显示的-->
+              <div class="ui middle aligned mobile reversed stackable grid">
+                <div class="eleven wide column">
+                  <h3 class="ui header">
+                    <a th:href="@{/blog/{id}(id=*{id})}" target="_blank" th:text="*{title}" class="m-black">
+                      你真的理解什么是财富自由吗?
+                    </a>
+                  </h3>
+                  <p th:text="|*{description}......|" class="m-text">正确做好任何一件事情的前提是清晰、正确的理解目标。
+                    而事实是,我们很多人很多时候根本没有对目标正确的定义, 甚至根本从来就没有想过,
+                    只是大家都那么做而已财富自由，是指你无须为生活开销而努力为钱工作的状态。
+                    简单地说，你的资产产生的被动收入必须至少等于或超过你的日常开支 ......
+                  </p>
+                  <div class="ui grid">
+                    <div class="eleven wide column">
+                      <div class="ui mini horizontal link list">
+                        <div class="item">
+                          <img th:src="@{*{user.avatar}}" alt="" class="ui avatar image">
+                          <div class="content">
+                            <a href="#" th:text="*{user.nickName}" class="header">李商隐</a>
+                          </div>
+                        </div>
+                        <div class="item">
+                          <i class="calendar icon"></i>
+                          <span th:text="*{#dates.format(updateTime,'yyyy-MM-dd')}">2021-03-20</span>
+                        </div>
+                        <div class="item">
+                          <i class="eye icon"></i>
+                          <span th:text="*{views}">2310</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="right aligned five wide column">
+                      <a th:href="@{/blog/{id}(id=*{id})}" target="_blank"
+                         class="ui basic teal label m-padding-tiny m-text-thin">
+                        <span th:text="*{type.name}">认知升级</span>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <div class="five wide column">
+                  <a target="_blank">
+                    <img th:src="@{*{firstPicture}}" alt="" class="ui rounded image">
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <!--分页-->
+          <div class="ui bottom attached segment"
+               th:if="${blogs.hasPreviousPage}!=false or ${blogs.hasNextPage}!=false">
+            <div class="ui middle aligned two column grid">
+              <div class="sixteen wide center aligned column">
+                <a onclick="page(this)" th:unless="${blogs.isFirstPage}" th:attr="data-page=${blogs.prePage}"
+                   class="ui small teal pages basic button">上一页</a>
+
+                <p style="max-width: 10em;display: inline-block; margin: 0 20px">
+                  第 <span th:text="${blogs.pageNum}"></span> 页/
+                  共 <span th:text="${blogs.pages}"></span> 页
+                </p>
+                <a onclick="page(this)" th:unless="${blogs.isLastPage}" th:attr="data-page=${blogs.nextPage}"
+                   class="ui small teal pages basic button">下一页</a>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!--底部-->
+  <footer th:replace="commons/common::footer"></footer>
+
+  <div th:replace="commons/common::common_js(_)"></div>
+
+  <script th:inline="javascript">
+      function page(obj) {
+          $('#search-request').load('/searchPage', {
+              pageNum: $(obj).data('page'),
+              query: $('[name="query"]').val()
+          })
+      }
+  </script>
+</body>
+</html>

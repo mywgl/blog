@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="commons/common::head(~{::title},_)">
+  <title>标签管理</title>
+</head>
+<body>
+  <!--导航-->
+  <nav th:replace="commons/admin-common::nav('tags')"></nav>
+  <!--<div th:replace="commons/admin-common::type_menu('types')"></div>-->
+
+  <!--中间内容-->
+  <div class="m-padded-tb-big m-container-small">
+    <div class="ui container">
+      <div class="ui success message" th:unless="${#strings.isEmpty(message)}">
+        <i class="close icon"></i>
+        <div class="header" th:text="|提示: ${message}|">提示:添加成功!</div>
+      </div>
+      <table class="ui table compact center aligned">
+        <thead>
+          <th colspan="6" class="center aligned">
+            <h2 style="display: inline-block">标签管理</h2>
+            <a th:href="@{/admin/tags/input}" class="ui mini right floated teal basic button">新增</a>
+          </th>
+          <tr>
+            <th>序号</th>
+            <th>名称</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="tag,iterStat: ${pageInfo.list}">
+            <td th:text="${iterStat.count}">1</td>
+            <td th:text="${tag.name}">刻意练习清单</td>
+            <td>
+              <a th:href="@{/admin/tags/{id}/input(id=${tag.id})}" class="ui button basic teal mini">编辑</a>
+              <a th:href="@{/admin/tags/{id}/delete(id=${tag.id})}" class="ui button basic red mini">删除</a>
+            </td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <th colspan="6">
+              <div class="ui inverted divided floated grid">
+                <div class="sixteen wide center aligned column">
+                  <a th:href="@{/admin/tags(pageNum=${pageInfo.hasPreviousPage} ? ${pageInfo.prePage})}"
+                     th:unless="${pageInfo.isFirstPage}" class="ui teal basic mini button">
+                    上一页
+                  </a>
+
+                  <p style="display: inline-block; margin: 0 20px">
+                    第 <span th:text="${pageInfo.pageNum}"></span> 页/
+                    共 <span th:text="${pageInfo.pages}"></span> 页|
+                    有 <span th:text="${pageInfo.total}"></span> 个标签
+                  </p>
+
+                  <a th:href="@{/admin/tags(pageNum=${pageInfo.hasNextPage} ? ${pageInfo.nextPage})}"
+                     th:unless="${pageInfo.isLastPage}" class="ui teal basic mini button">
+                    下一页
+                  </a>
+                </div>
+
+              </div>
+            </th>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+
+  <!--底部-->
+  <footer th:replace="commons/common::footer"></footer>
+
+  <div th:replace="commons/common::common_js(_)"></div>
+
+  <script>
+      $('.ui.dropdown').dropdown({
+          on: 'hover'
+      })
+      //消息提示关闭初始化
+      $('.message .close').click(function(){
+          $(this).closest('.message').transition('fade')
+      })
+  </script>
+</body>
+</html>

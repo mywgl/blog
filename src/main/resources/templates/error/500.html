@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="commons/common::head(~{::title},_)">
+  <title>500</title>
+</head>
+<body>
+  <nav th:replace="commons/common::topbar('')"></nav>
+  <div class="m-container-small m-padded-tb-veryBig">
+    <div class="ui error message m-padded-tb-huge">
+      <div class="ui container center aligned">
+        <h1>错误</h1>
+        <p>对不起,服务器异常,请联系管理员!</p>
+      </div>
+    </div>
+  </div>
+  <footer th:replace="commons/common::footer"></footer>
+</body>
+</html>

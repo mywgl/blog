@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="commons/common::head(~{::title},_)">
+  <title>归档</title>
+</head>
+<body>
+  <!--导航-->
+  <nav th:replace="commons/common::topbar('archives')"></nav>
+
+  <!--中间内容-->
+  <div class="m-padded-tb-big m-container-small">
+    <div class="ui container">
+      <!--header-->
+      <div class="ui top attached padded segment">
+        <div class="ui middle aligned two column grid">
+          <div class="column">
+            <h3 class="ui teal header">归档</h3>
+          </div>
+          <div class="column right aligned">
+            共 <h2 class="ui orange header m-inline-block" th:text="${blogs.total}"> 144 </h2>篇博客
+          </div>
+        </div>
+      </div>
+
+      <div class="ui teal segment">
+        <th:block th:each="archive: ${archiveMap}" th:if="${archive.key }">
+          <h3 class="ui blue center aligned header m-padded-mini" th:text="${archive.key}">2021</h3>
+          <div class="ui fluid vertical menu" style="box-shadow: 2px 3px 2px #64a5dc; ">
+            <a th:href="@{/blog/{id}(id=${blog.id})}" th:each="blog: ${archive.value}" class="item">
+             <span>
+                <i class="mini teal circle icon m-margin"></i><span th:text="${blog.title}">关于刻意练习的清单</span>
+                 <div class="ui teal basic left pointing label m-padding mini"
+                      th:text="${#dates.format(blog.createTime,'MMMdd')}">9月30
+                 </div>
+             </span>
+              <div th:text="${blog.flag}" class="ui orange basic left pointing label m-padding mini">原创</div>
+            </a>
+
+          </div>
+        </th:block>
+      </div>
+
+    </div>
+  </div>
+
+  <!--底部-->
+  <footer th:replace="commons/common::footer"></footer>
+
+  <div th:replace="commons/common::common_js(_)"></div>
+</body>
+</html>

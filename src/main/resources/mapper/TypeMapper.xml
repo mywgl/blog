@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.blog.dao.TypeDao">
+    <insert id="saveType" parameterType="Type">
+        insert into t_type(name) value (#{name});
+    </insert>
+
+    <select id="getTypeById" parameterType="Long" resultType="Type">
+        select *
+        from t_type
+        where id = #{id};
+    </select>
+
+    <update id="updateType" parameterType="Type">
+        update t_type
+        set name=#{name}
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="Long">
+        delete
+        from t_type
+        where id = #{id}
+    </delete>
+
+
+    <select id="getAllType" resultType="type">
+        select *
+        from t_type
+    </select>
+
+    <select id="getTypeByName" parameterType="String" resultType="Type">
+        select *
+        from t_type
+        where name = #{name}
+    </select>
+
+    <resultMap id="type" type="Type">
+        <id property="id" column="t_id"/>
+        <result property="name" column="t_name"/>
+        <collection property="blogs" columnPrefix="tb_" ofType="Blog">
+            <id property="id" column="id"/>
+            <result property="title" column="title"/>
+        </collection>
+    </resultMap>
+
+    <select id="getTypeTop" parameterType="_int" resultMap="type">
+        SELECT t.id t_id,
+               t.name t_name,
+               tb.id tb_id,
+               tb.title tb_title
+        FROM t_type t
+                 LEFT JOIN t_blog tb ON t.id = tb.type_id
+                 RIGHT JOIN (SELECT t_type.id id, count(1) c
+                             FROM t_type,
+                                  t_blog
+                             WHERE type_id = t_type.id
+                             GROUP BY id
+                             LIMIT #{pageSize}) t2
+                     ON t.id = t2.id
+        order by t2.c desc;
+    </select>
+</mapper>

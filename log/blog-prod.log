@@ -1,0 +1,3 @@
+2021-03-24 14:08:38.351  INFO 4496 --- [main] com.blog.BlogApplication                 : Starting BlogApplication using Java 1.8.0_144 on WGL with PID 4496 (F:\Work\blog\target\classes started by Administrator in F:\Work\blog)
+2021-03-24 14:08:38.355  INFO 4496 --- [main] com.blog.BlogApplication                 : The following profiles are active: prod
+2021-03-24 14:08:39.991  INFO 4496 --- [main] com.blog.BlogApplication                 : Started BlogApplication in 2.083 seconds (JVM running for 2.763)
